@@ -13,34 +13,24 @@ export class AppComponent implements OnInit {
   public selectedIndex = 0;
   public appPages = [
     {
-      title: 'Function 1',
+      title: 'Alerts',
       url: '/app/home',
-      icon: 'warning'
+      icon: 'notifications'
     },
     {
-      title: 'Function 2',
+      title: 'COVID-19 CDC Resource',
       url: '/app/home',
-      icon: 'warning'
+      icon: 'file-tray-full'
     },
     {
-      title: 'Function 3',
+      title: 'COVID-19 Chat Bot',
       url: '/app/home',
-      icon: 'warning'
+      icon: 'chatbubbles'
     },
     {
-      title: 'Function 4',
+      title: 'Settings',
       url: '/app/home',
-      icon: 'warning'
-    },
-    {
-      title: 'Function 5',
-      url: '/app/home',
-      icon: 'warning'
-    },
-    {
-      title: 'Function 6',
-      url: '/app/home',
-      icon: 'warning'
+      icon: 'settings'
     }
   ];
   constructor(
