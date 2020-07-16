@@ -391,9 +391,29 @@ export class MapHomeScreen implements OnInit {
     }
     async openMapOptions() {
         let modal = await this.modalCtrl.create({
-            component: MapOptionsScreen
+            component: MapOptionsScreen,
+            componentProps: {
+                'map': this.map
+            }
         });
-        return await modal.present();
+        await modal.present();
+        const { data } = await modal.onWillDismiss();
+        this.map = new google.maps.Map(document.getElementById('map-container'), {
+            center: this.userLocation.getPosition(),
+            zoom: 13,
+            styles: data.componentProps.map.styles,
+            disableDefaultUI: true
+        });
+        this.userLocation = new google.maps.Marker({
+            clickable: true,
+            position: this.userLocation.getPosition(),
+            map: this.map
+        });
+        this.heatmap = new google.maps.visualization.HeatmapLayer({
+            data: this.heatmapData
+        });
+        this.heatmap.setMap(this.map);
+        this.updateUserLocation()
     }
 }
 
