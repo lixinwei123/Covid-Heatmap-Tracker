@@ -30,14 +30,19 @@
 </ion-toolbar>
 
 <ion-toolbar>
+
   <ion-footer class="ion-no-border" id="home-screen-bottom-nav">
-    <div class="bottom-nav-item" (click)="this.map.panTo(this.userLocation.getPosition());this.map.setZoom(15)">
-      <ion-icon name="navigate-outline"></ion-icon>
-      <p>My Location</p>
-    </div>
-    <div class="bottom-nav-item" (click)="openMapOptions()">
-      <ion-icon name="filter-outline"></ion-icon>
-      <p>Map Options</p>
-    </div>
+    <ion-grid>
+      <ion-row>
+        <ion-col class="bottom-nav-item" (click)="this.map.panTo(this.userLocation.getPosition());this.map.setZoom(15)">
+            <ion-icon name="navigate-outline"></ion-icon>
+            <p>My Location</p>
+        </ion-col>
+        <ion-col class="bottom-nav-item" (click)="openMapOptions()">
+            <ion-icon name="filter-outline"></ion-icon>
+            <p>Map Options</p>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-footer>
 </ion-toolbar>
