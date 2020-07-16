@@ -1,7 +1,8 @@
 {
   "name": "Crowd-Control-Covid",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
   "type": "angular"
 }

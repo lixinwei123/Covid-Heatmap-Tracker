@@ -1,11 +1,12 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { MouseEvent, GoogleMapsAPIWrapper, MarkerManager } from '@agm/core'
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @Component({
     selector: 'app-map-home-screen',
     templateUrl: './map-home-screen.page.html',
     styleUrls: ['./map-home-screen.page.scss'],
-    providers: [GoogleMapsAPIWrapper]
+    providers: [GoogleMapsAPIWrapper, Geolocation]
 })
 export class MapHomeScreen implements OnInit {
     public googleMapStyles: Array<any> = [
@@ -269,7 +270,7 @@ export class MapHomeScreen implements OnInit {
     public canCheckIn: boolean
     public zoom: number = 15
 
-    constructor(private mapsWrapper: GoogleMapsAPIWrapper) {
+    constructor(private mapsWrapper: GoogleMapsAPIWrapper, private geolocation: Geolocation) {
         this.mapsWrapper = mapsWrapper
     }
 
@@ -304,6 +305,16 @@ export class MapHomeScreen implements OnInit {
         navigator.geolocation.watchPosition(async (position) => {
             this.setCurrentPosition()
         })
+    }
+
+    private async recenter(){
+        let result = await this.geolocation.getCurrentPosition({ enableHighAccuracy: true}).catch((error) => {
+            console.log('Error getting location', error); 
+        });
+        if (!!result){
+            this.mapsWrapper.setCenter({ lat: result.coords.latitude, lng: result.coords.longitude });
+            this.mapsWrapper.setZoom(15);
+        }
     }
 
 }
