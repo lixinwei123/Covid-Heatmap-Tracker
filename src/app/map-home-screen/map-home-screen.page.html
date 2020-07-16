@@ -26,12 +26,12 @@
 </ion-toolbar>
 
 <ion-toolbar>
-  <ion-searchbar class="large-search" placeholder="Search A Place?"></ion-searchbar>
+  <ion-searchbar [(ngModel)]="queryText" class="large-search" placeholder="Search A Place?" (keydown.enter)="search()"></ion-searchbar>
 </ion-toolbar>
 
 <ion-toolbar>
   <ion-footer class="ion-no-border" id="home-screen-bottom-nav">
-    <div class="bottom-nav-item">
+    <div class="bottom-nav-item" (click)="recenter()">
       <ion-icon name="navigate-outline"></ion-icon>
       <p>My Location</p>
     </div>
