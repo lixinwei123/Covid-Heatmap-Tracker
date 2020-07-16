@@ -276,7 +276,7 @@ export class MapHomeScreen implements OnInit {
     private proxyurl = 'https://cors-anywhere.herokuapp.com/';
     private API_AUTH_KEY = 'AIzaSyB1rFlu0wU5C1mRq-gc18Qq5U-iNlPhT1k';
     private oldMarker: any
-    public map: google.maps.Map;
+    public mapWrapper: google.maps.Map;
     public heatmap: google.maps.visualization.HeatmapLayer
     public heatmapData: any;
 
@@ -289,7 +289,7 @@ export class MapHomeScreen implements OnInit {
          this.heatmapData = [];
           
         //   var sanFrancisco = new google.maps.LatLng(37.774546, -122.433523);
-           this.map = new google.maps.Map(document.getElementById('map-container'), {
+           this.mapWrapper = new google.maps.Map(document.getElementById('map-container'), {
             center: null,
             zoom: 13,
             styles: this.googleMapStyles,
@@ -299,7 +299,7 @@ export class MapHomeScreen implements OnInit {
          this.heatmap = new google.maps.visualization.HeatmapLayer({
             data: this.heatmapData
           });
-          this.heatmap.setMap(this.map);
+          this.heatmap.setMap(this.mapWrapper);
         this.updateUserLocation()
 
     }
@@ -308,14 +308,14 @@ export class MapHomeScreen implements OnInit {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(async (position) => {
 
-                this.map.setCenter({ lat: position.coords.latitude, lng: position.coords.longitude })
+                this.mapWrapper.setCenter({ lat: position.coords.latitude, lng: position.coords.longitude })
 
                 if (!this.userLocation) {
                     this.userLocation = new google.maps.Marker(
                         {
                             position: { lat: position.coords.latitude, lng: position.coords.longitude },
                             clickable: false,
-                            map:this.map
+                            map:this.mapWrapper
                         })
                         this.heatmapData.push(new google.maps.LatLng(position.coords.latitude,position.coords.longitude))
                         this.heatmap.setData(this.heatmapData)
