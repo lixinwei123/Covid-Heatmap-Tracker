@@ -276,20 +276,19 @@ export class MapHomeScreen implements OnInit {
     private proxyurl = 'https://cors-anywhere.herokuapp.com/';
     private API_AUTH_KEY = 'AIzaSyB1rFlu0wU5C1mRq-gc18Qq5U-iNlPhT1k';
     private oldMarker: any
-    public mapWrapper: google.maps.Map;
+    public mapsWrapper: google.maps.Map;
     public heatmap: google.maps.visualization.HeatmapLayer
     public heatmapData: any;
 
-    constructor(private mapsWrapper: GoogleMapsAPIWrapper, private geolocation: Geolocation, private modalCtrl: ModalController) {
-        this.mapsWrapper = mapsWrapper;
+    constructor( private geolocation: Geolocation, private modalCtrl: ModalController) {
+
     }
 
     async ngOnInit() {
         console.log(document.getElementById('map-container'))
          this.heatmapData = [];
-          
         //   var sanFrancisco = new google.maps.LatLng(37.774546, -122.433523);
-           this.mapWrapper = new google.maps.Map(document.getElementById('map-container'), {
+           this.mapsWrapper = new google.maps.Map(document.getElementById('map-container'), {
             center: null,
             zoom: 13,
             styles: this.googleMapStyles,
@@ -299,7 +298,7 @@ export class MapHomeScreen implements OnInit {
          this.heatmap = new google.maps.visualization.HeatmapLayer({
             data: this.heatmapData
           });
-          this.heatmap.setMap(this.mapWrapper);
+          this.heatmap.setMap(this.mapsWrapper);
         this.updateUserLocation()
 
     }
@@ -308,14 +307,14 @@ export class MapHomeScreen implements OnInit {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(async (position) => {
 
-                this.mapWrapper.setCenter({ lat: position.coords.latitude, lng: position.coords.longitude })
-
+                this.mapsWrapper.setCenter({ lat: position.coords.latitude, lng: position.coords.longitude })
+                console.log("user position:", position.coords.latitude, position.coords.longitude)
                 if (!this.userLocation) {
                     this.userLocation = new google.maps.Marker(
                         {
                             position: { lat: position.coords.latitude, lng: position.coords.longitude },
                             clickable: false,
-                            map:this.mapWrapper
+                            map:this.mapsWrapper
                         })
                         this.heatmapData.push(new google.maps.LatLng(position.coords.latitude,position.coords.longitude))
                         this.heatmap.setData(this.heatmapData)
@@ -355,9 +354,9 @@ export class MapHomeScreen implements OnInit {
     }
 
     async moveMap(resp) {
-        const places = (await resp.candidates).slice(0, 7);
-        const placeId = places[0];
-        const map = await this.mapsWrapper.getNativeMap();
+        const placeId = await resp.candidates[0].place_id;
+        // const map = await this.mapsWrapper.getNativeMap();
+        const map = await this.mapsWrapper
         const url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + placeId
             + '&fields=geometry,name&key=' + this.API_AUTH_KEY;
 
@@ -417,8 +416,8 @@ export class MapHomeScreen implements OnInit {
     }
 
     //pass in an instance of google map to 
-    async getCrowdByMap(map){
-
+    async getPlacesByCoord(map){
+        
     }
 }
 
