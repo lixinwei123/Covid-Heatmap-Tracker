@@ -297,7 +297,9 @@ export class MapHomeScreen implements OnInit {
           });
           
          this.heatmap = new google.maps.visualization.HeatmapLayer({
-            data: this.heatmapData
+            data: this.heatmapData,
+            dissipating: true,
+            radius:35
           });
           this.heatmap.setMap(this.mapsWrapper);
         this.updateUserLocation()
@@ -317,8 +319,6 @@ export class MapHomeScreen implements OnInit {
                             map:this.mapsWrapper
                         })
                         this.getPlacesByCoord(position.coords.latitude,position.coords.longitude)
-                        this.heatmapData.push(new google.maps.LatLng(position.coords.latitude,position.coords.longitude))
-                        this.heatmap.setData(this.heatmapData)
 
                 } else {
                     this.userLocation.setPosition({ lat: position.coords.latitude, lng: position.coords.longitude });
@@ -374,6 +374,8 @@ export class MapHomeScreen implements OnInit {
             .then(response => response.json())
             .then(content => {
                 const newLocation = content.result.geometry.location;
+                this.getPlacesByCoord(newLocation.lat,newLocation.lng)
+                console.log("new location",newLocation)
                 this.mapsWrapper.panTo(newLocation);
                 const marker = new google.maps.Marker({
                     clickable: true,
@@ -425,8 +427,8 @@ export class MapHomeScreen implements OnInit {
 
     //pass in an instance of google map to 
     async getPlacesByCoord(lat,lng){
-        lat = 39.952019
-        lng =-75.161797
+        // lat = 39.952019
+        // lng =-75.161797
         // var service = new google.maps.places.PlacesService(map);
         const url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='
         + lat + ","+lng + '&radius=50' +'&key=' + this.API_AUTH_KEY
@@ -442,11 +444,27 @@ export class MapHomeScreen implements OnInit {
     }
 
      async getHeatMapData(results){
+        var currentHour = new Date().getHours();
+        var currentDay = new Date().getDay() - 1;
         for(var place in results){
             console.log(results[place])
             const url = "http://100.25.159.100/api/get_popular_times?key=" + this.API_AUTH_KEY + "&place_id=" + results[place].place_id
             fetch(this.proxyurl + url).
-            then(response=> response.json().then(data => console.log(data)))
+            then(response=> response.json().then(data => {
+                console.log(data)
+                if(data.populartimes){
+                    this.heatmapData.push({location: new google.maps.LatLng(data.coordinates.lat,data.coordinates.lng),weight: 0.8 + (data.populartimes[currentDay].data[currentHour] / 10) * 0.25,radius:1000})
+                    for(var time in data.populartimes){
+                       console.log(1 + (data.populartimes[currentDay].data[currentHour] / 10) * 0.25)
+                    }
+
+                }else{
+                    this.heatmapData.push({location: new google.maps.LatLng(data.coordinates.lat,data.coordinates.lng),weight: Math.random() * 4 + 2})
+                    console.log(Math.random() * 4)
+                }
+                this.heatmap.setData(this.heatmapData)
+                this.heatmap.setMap(this.mapsWrapper);
+            }))
             .catch(reason =>{
                 console.error('Error fetching. Check proxy?')
             })
