@@ -393,12 +393,12 @@ export class MapHomeScreen implements OnInit {
         let modal = await this.modalCtrl.create({
             component: MapOptionsScreen,
             componentProps: {
-                'map': this.map
+                'map': this.mapWrapper
             }
         });
         await modal.present();
         const { data } = await modal.onWillDismiss();
-        this.map = new google.maps.Map(document.getElementById('map-container'), {
+        this.mapWrapper = new google.maps.Map(document.getElementById('map-container'), {
             center: this.userLocation.getPosition(),
             zoom: 13,
             styles: data.componentProps.map.styles,
@@ -407,12 +407,12 @@ export class MapHomeScreen implements OnInit {
         this.userLocation = new google.maps.Marker({
             clickable: true,
             position: this.userLocation.getPosition(),
-            map: this.map
+            map: this.mapWrapper
         });
         this.heatmap = new google.maps.visualization.HeatmapLayer({
             data: this.heatmapData
         });
-        this.heatmap.setMap(this.map);
+        this.heatmap.setMap(this.mapWrapper);
         this.updateUserLocation()
     }
 
