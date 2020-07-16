@@ -31,25 +31,13 @@
 
 <ion-toolbar>
   <ion-footer class="ion-no-border" id="home-screen-bottom-nav">
-    <ion-grid>
-      <ion-row>
-        <ion-col class="bottom-nav-item">  
-          <ion-icon name="navigate-outline" (click)="recenter()"></ion-icon>
-          <p>My Location</p>
-        </ion-col>
-        <ion-col (click)="openMapOptions()" class="bottom-nav-item">
-          <ion-icon name="filter-outline"></ion-icon>
-          <p>Map Options</p>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    <!-- <div class="bottom-nav-item" (click)="recenter()">
+    <div class="bottom-nav-item" (click)="this.map.panTo(this.userLocation.getPosition());this.map.setZoom(15)">
       <ion-icon name="navigate-outline"></ion-icon>
       <p>My Location</p>
-    </div> -->
-    <!-- <div class="bottom-nav-item" (click)="openMapOptions()">
+    </div>
+    <div class="bottom-nav-item" (click)="openMapOptions()">
       <ion-icon name="filter-outline"></ion-icon>
       <p>Map Options</p>
-    </div> -->
+    </div>
   </ion-footer>
 </ion-toolbar>

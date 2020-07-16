@@ -331,15 +331,6 @@ export class MapHomeScreen implements OnInit {
             this.setCurrentPosition();
         });
     }
-    private async recenter(){
-        const result = await this.geolocation.getCurrentPosition({ enableHighAccuracy: true}).catch((error) => {
-            console.log('Error getting location', error);
-        });
-        if (!!result){
-            this.mapsWrapper.setCenter({ lat: result.coords.latitude, lng: result.coords.longitude });
-            this.mapsWrapper.setZoom(15);
-        }
-    }
 
     async search() {
         let location = '';
