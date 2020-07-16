@@ -16,7 +16,7 @@ import { AgmCoreModule } from '@agm/core';
     IonicModule,
     MapHomeScreenRoutingModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCogfPgTo28jHyooKFRRWm_HduAkITny8w', 
+      apiKey: 'AIzaSyB1rFlu0wU5C1mRq-gc18Qq5U-iNlPhT1k',
       libraries: ['places']
     })
   ],
