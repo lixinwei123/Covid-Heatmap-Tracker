@@ -4,6 +4,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { MapOptionsScreen } from '../map-options-screen/map-options-screen.page';
 import { ModalController } from '@ionic/angular';
 import { JsonPipe } from '@angular/common';
+import { range } from 'rxjs';
 declare const google: any
 @Component({
     selector: 'app-map-home-screen',
@@ -298,8 +299,8 @@ export class MapHomeScreen implements OnInit {
           
          this.heatmap = new google.maps.visualization.HeatmapLayer({
             data: this.heatmapData,
-            dissipating: true,
-            radius:35
+            radius:15,
+            // dissipating: false
           });
           this.heatmap.setMap(this.mapsWrapper);
         this.updateUserLocation()
@@ -377,6 +378,7 @@ export class MapHomeScreen implements OnInit {
                 this.getPlacesByCoord(newLocation.lat,newLocation.lng)
                 console.log("new location",newLocation)
                 this.mapsWrapper.panTo(newLocation);
+                this.mapsWrapper.setZoom(this.zoom);
                 const marker = new google.maps.Marker({
                     clickable: true,
                     position: newLocation,
@@ -430,20 +432,25 @@ export class MapHomeScreen implements OnInit {
         // lat = 39.952019
         // lng =-75.161797
         // var service = new google.maps.places.PlacesService(map);
+        
+
+        this.heatmap.setData(this.heatmapData)
+        console.log(this.heatmapData)
+        this.heatmap.setMap(this.mapsWrapper);
         const url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='
         + lat + ","+lng + '&radius=50' +'&key=' + this.API_AUTH_KEY
         console.log(url)
         fetch(this.proxyurl + url)
         .then(response => response.json().then(data => {
             console.log(data.results)
-            this.getHeatMapData(data.results)
+            this.getHeatMapData(data.results,lat,lng)
         }))
         .catch(reason => {
             console.error('Error fetching Google Maps API. Check proxy? ' + reason);
         })
     }
 
-     async getHeatMapData(results){
+     async getHeatMapData(results,lat,lng){
         var currentHour = new Date().getHours();
         var currentDay = new Date().getDay() - 1;
         for(var place in results){
@@ -453,7 +460,7 @@ export class MapHomeScreen implements OnInit {
             then(response=> response.json().then(data => {
                 console.log(data)
                 if(data.populartimes){
-                    this.heatmapData.push({location: new google.maps.LatLng(data.coordinates.lat,data.coordinates.lng),weight: 0.8 + (data.populartimes[currentDay].data[currentHour] / 10) * 0.25,radius:1000})
+                    this.heatmapData.push({location: new google.maps.LatLng(data.coordinates.lat,data.coordinates.lng),weight: 0.5 + (data.populartimes[currentDay].data[currentHour] / 10) * 0.25})
                     for(var time in data.populartimes){
                        console.log(1 + (data.populartimes[currentDay].data[currentHour] / 10) * 0.25)
                     }
@@ -462,6 +469,13 @@ export class MapHomeScreen implements OnInit {
                     this.heatmapData.push({location: new google.maps.LatLng(data.coordinates.lat,data.coordinates.lng),weight: Math.random() * 4 + 2})
                     console.log(Math.random() * 4)
                 }
+                // for(var i = 0; i < 100;i ++){
+                //     var latlng = this.randomGeo(lat,lng,100)
+                //     var weightrand = Math.random() * 3 + 0.5
+                //     console.log(weightrand)
+                //     this.heatmapData.push({location: new google.maps.LatLng(latlng.lat, latlng.lng),weight:weightrand })
+               
+                //         }
                 this.heatmap.setData(this.heatmapData)
                 this.heatmap.setMap(this.mapsWrapper);
             }))
@@ -469,6 +483,26 @@ export class MapHomeScreen implements OnInit {
                 console.error('Error fetching. Check proxy?')
             })
         }
+    }
+    randomGeo(lat,lng, radius) {
+        var y0 = lat;
+        var x0 = lng;
+        var rd = radius / 111300;
+    
+        var u = Math.random();
+        var v = Math.random();
+    
+        var w = rd * Math.sqrt(u);
+        var t = 2 * Math.PI * v;
+        var x = w * Math.cos(t);
+        var y = w * Math.sin(t);
+    
+        // var xp = x / Math.cos(y0);
+    
+        return {
+            'lat': y + y0,
+            'lng': x + x0
+        };
     }
 }
 
