@@ -31,7 +31,7 @@
 
 <ion-toolbar>
   <ion-footer class="ion-no-border" id="home-screen-bottom-nav">
-    <div class="bottom-nav-item" (click)="recenter()">
+    <div class="bottom-nav-item" (click)="this.map.panTo(this.userLocation.getPosition());this.map.setZoom(15)">
       <ion-icon name="navigate-outline"></ion-icon>
       <p>My Location</p>
     </div>

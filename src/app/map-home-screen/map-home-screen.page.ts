@@ -291,7 +291,7 @@ export class MapHomeScreen implements OnInit {
         //   var sanFrancisco = new google.maps.LatLng(37.774546, -122.433523);
            this.map = new google.maps.Map(document.getElementById('map-container'), {
             center: null,
-            zoom: 13,
+            zoom: 15,
             styles: this.googleMapStyles,
             disableDefaultUI: true
           });
@@ -331,15 +331,6 @@ export class MapHomeScreen implements OnInit {
         navigator.geolocation.watchPosition(async (position) => {
             this.setCurrentPosition();
         });
-    }
-    private async recenter(){
-        const result = await this.geolocation.getCurrentPosition({ enableHighAccuracy: true}).catch((error) => {
-            console.log('Error getting location', error);
-        });
-        if (!!result){
-            this.mapsWrapper.setCenter({ lat: result.coords.latitude, lng: result.coords.longitude });
-            this.mapsWrapper.setZoom(15);
-        }
     }
 
     async search() {
