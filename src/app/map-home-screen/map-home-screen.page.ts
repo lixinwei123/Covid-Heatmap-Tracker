@@ -354,8 +354,7 @@ export class MapHomeScreen implements OnInit {
     }
 
     async moveMap(resp) {
-        const places = (await resp.candidates).slice(0, 7);
-        const placeId = places[0];
+        const placeId = await resp.candidates[0].place_id;
         // const map = await this.mapsWrapper.getNativeMap();
         const map = await this.mapsWrapper
         const url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + placeId
