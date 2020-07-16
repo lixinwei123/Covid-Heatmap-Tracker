@@ -404,5 +404,10 @@ export class MapHomeScreen implements OnInit {
         });
         return await modal.present();
     }
+
+    //pass in an instance of google map to 
+    async getCrowdByMap(map){
+
+    }
 }
 
