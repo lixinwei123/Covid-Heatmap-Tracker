@@ -364,14 +364,11 @@ export class MapHomeScreen implements OnInit {
     }
 
     async moveMap(resp) {
-        const places = (await resp.candidates).slice(0, 7);
-        const placeId = places[0];
+        const placeId = await resp.candidates[0].place_id;
         // const map = await this.mapsWrapper.getNativeMap();
         const map = await this.mapsWrapper
         const url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + placeId
             + '&fields=geometry,name&key=' + this.API_AUTH_KEY;
-
-        console.log(places);
 
         fetch(this.proxyurl + url)
             .then(response => response.json())
@@ -401,9 +398,29 @@ export class MapHomeScreen implements OnInit {
     }
     async openMapOptions() {
         let modal = await this.modalCtrl.create({
-            component: MapOptionsScreen
+            component: MapOptionsScreen,
+            componentProps: {
+                'map': this.mapsWrapper
+            }
         });
-        return await modal.present();
+        await modal.present();
+        const { data } = await modal.onWillDismiss();
+        this.mapsWrapper = new google.maps.Map(document.getElementById('map-container'), {
+            center: this.userLocation.getPosition(),
+            zoom: 13,
+            styles: data.componentProps.map.styles,
+            disableDefaultUI: true
+        });
+        this.userLocation = new google.maps.Marker({
+            clickable: true,
+            position: this.userLocation.getPosition(),
+            map: this.mapsWrapper
+        });
+        this.heatmap = new google.maps.visualization.HeatmapLayer({
+            data: this.heatmapData
+        });
+        this.heatmap.setMap(this.mapsWrapper);
+        this.updateUserLocation()
     }
 
     //pass in an instance of google map to 
