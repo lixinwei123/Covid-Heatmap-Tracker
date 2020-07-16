@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { MouseEvent, GoogleMapsAPIWrapper, MarkerManager } from '@agm/core'
 import { MapOptionsScreen } from '../map-options-screen/map-options-screen.page';
 import { ModalController } from '@ionic/angular';
-
+declare const google: any
 @Component({
     selector: 'app-map-home-screen',
     templateUrl: './map-home-screen.page.html',
@@ -270,6 +270,9 @@ export class MapHomeScreen implements OnInit {
     public siteLocation: any
     public canCheckIn: boolean
     public zoom: number = 15
+    public map: google.maps.Map;
+    public heatmap: google.maps.visualization.HeatmapLayer
+    public heatmapData: any;
 
     constructor(private mapsWrapper: GoogleMapsAPIWrapper, public modalController: ModalController) {
         this.mapsWrapper = mapsWrapper
@@ -277,24 +280,36 @@ export class MapHomeScreen implements OnInit {
 
     async ngOnInit() {
         console.log(document.getElementById('map-container'))
-        await this.mapsWrapper.createMap(document.getElementById('map-container'), {
-            zoom: 15,
+         this.heatmapData = [];
+          
+          var sanFrancisco = new google.maps.LatLng(37.774546, -122.433523);
+           this.map = new google.maps.Map(document.getElementById('map-container'), {
+            center: sanFrancisco,
+            zoom: 13,
             styles: this.googleMapStyles,
             disableDefaultUI: true
-        })
+          });
+          
+         this.heatmap = new google.maps.visualization.HeatmapLayer({
+            data: this.heatmapData
+          });
+          this.heatmap.setMap(this.map);
         this.updateUserLocation()
     }
 
     private setCurrentPosition() {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(async (position) => {
-                this.mapsWrapper.setCenter({ lat: position.coords.latitude, lng: position.coords.longitude })
+                this.map.setCenter({ lat: position.coords.latitude, lng: position.coords.longitude })
                 if (!this.userLocation) {
-                    this.userLocation = await this.mapsWrapper.createMarker(
+                    this.userLocation = new google.maps.Marker(
                         {
                             position: { lat: position.coords.latitude, lng: position.coords.longitude },
                             clickable: false,
+                            map:this.map
                         })
+                        this.heatmapData.push(new google.maps.LatLng(position.coords.latitude,position.coords.longitude))
+                        this.heatmap.setData(this.heatmapData)
                 } else {
                     this.userLocation.setPosition({ lat: position.coords.latitude, lng: position.coords.longitude })
                 }
