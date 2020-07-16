@@ -3,6 +3,7 @@ import { MouseEvent, GoogleMapsAPIWrapper, MarkerManager, AgmMarker} from '@agm/
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { MapOptionsScreen } from '../map-options-screen/map-options-screen.page';
 import { ModalController } from '@ionic/angular';
+import { JsonPipe } from '@angular/common';
 declare const google: any
 @Component({
     selector: 'app-map-home-screen',
@@ -300,7 +301,6 @@ export class MapHomeScreen implements OnInit {
           });
           this.heatmap.setMap(this.mapsWrapper);
         this.updateUserLocation()
-
     }
 
     private setCurrentPosition() {
@@ -316,6 +316,7 @@ export class MapHomeScreen implements OnInit {
                             clickable: false,
                             map:this.mapsWrapper
                         })
+                        this.getPlacesByCoord(position.coords.latitude,position.coords.longitude)
                         this.heatmapData.push(new google.maps.LatLng(position.coords.latitude,position.coords.longitude))
                         this.heatmap.setData(this.heatmapData)
 
@@ -330,6 +331,15 @@ export class MapHomeScreen implements OnInit {
         navigator.geolocation.watchPosition(async (position) => {
             this.setCurrentPosition();
         });
+    }
+    private async recenter(){
+        const result = await this.geolocation.getCurrentPosition({ enableHighAccuracy: true}).catch((error) => {
+            console.log('Error getting location', error);
+        });
+        if (!!result){
+            this.mapsWrapper.setCenter({ lat: result.coords.latitude, lng: result.coords.longitude });
+            this.mapsWrapper.setZoom(15);
+        }
     }
 
     async search() {
@@ -397,8 +407,33 @@ export class MapHomeScreen implements OnInit {
     }
 
     //pass in an instance of google map to 
-    async getPlacesByCoord(map){
-        
+    async getPlacesByCoord(lat,lng){
+        lat = 39.952019
+        lng =-75.161797
+        // var service = new google.maps.places.PlacesService(map);
+        const url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='
+        + lat + ","+lng + '&radius=50' +'&key=' + this.API_AUTH_KEY
+        console.log(url)
+        fetch(this.proxyurl + url)
+        .then(response => response.json().then(data => {
+            console.log(data.results)
+            this.getHeatMapData(data.results)
+        }))
+        .catch(reason => {
+            console.error('Error fetching Google Maps API. Check proxy? ' + reason);
+        })
+    }
+
+     async getHeatMapData(results){
+        for(var place in results){
+            console.log(results[place])
+            const url = "http://100.25.159.100/api/get_popular_times?key=" + this.API_AUTH_KEY + "&place_id=" + results[place].place_id
+            fetch(this.proxyurl + url).
+            then(response=> response.json().then(data => console.log(data)))
+            .catch(reason =>{
+                console.error('Error fetching. Check proxy?')
+            })
+        }
     }
 }
 
