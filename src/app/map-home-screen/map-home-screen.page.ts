@@ -280,7 +280,7 @@ export class MapHomeScreen implements OnInit {
     public heatmap: google.maps.visualization.HeatmapLayer
     public heatmapData: any;
 
-    constructor(private mapsWrapper: GoogleMapsAPIWrapper, private geolocation: Geolocation) {
+    constructor(private mapsWrapper: GoogleMapsAPIWrapper, private geolocation: Geolocation, private modalCtrl: ModalController) {
         this.mapsWrapper = mapsWrapper;
     }
 
@@ -398,11 +398,11 @@ export class MapHomeScreen implements OnInit {
                 console.error('Error Moving Map: ' + reason);
             });
     }
-    // async openMapOptions() {
-    //     let modal = await this.modalController.create({
-    //         component: MapOptionsScreen
-    //     });
-    //     return await modal.present();
-    // }
+    async openMapOptions() {
+        let modal = await this.modalCtrl.create({
+            component: MapOptionsScreen
+        });
+        return await modal.present();
+    }
 }
 
