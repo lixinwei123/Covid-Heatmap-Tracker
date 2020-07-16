@@ -291,7 +291,7 @@ export class MapHomeScreen implements OnInit {
         //   var sanFrancisco = new google.maps.LatLng(37.774546, -122.433523);
            this.map = new google.maps.Map(document.getElementById('map-container'), {
             center: null,
-            zoom: 15,
+            zoom: 13,
             styles: this.googleMapStyles,
             disableDefaultUI: true
           });
