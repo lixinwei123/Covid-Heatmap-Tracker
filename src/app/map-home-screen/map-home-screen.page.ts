@@ -1,5 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { MouseEvent, GoogleMapsAPIWrapper, MarkerManager } from '@agm/core'
+import { MapOptionsScreen } from '../map-options-screen/map-options-screen.page';
+import { ModalController } from '@ionic/angular';
 
 @Component({
     selector: 'app-map-home-screen',
@@ -269,7 +271,7 @@ export class MapHomeScreen implements OnInit {
     public canCheckIn: boolean
     public zoom: number = 15
 
-    constructor(private mapsWrapper: GoogleMapsAPIWrapper) {
+    constructor(private mapsWrapper: GoogleMapsAPIWrapper, public modalController: ModalController) {
         this.mapsWrapper = mapsWrapper
     }
 
@@ -306,4 +308,12 @@ export class MapHomeScreen implements OnInit {
         })
     }
 
+    async openMapOptions() {
+        let modal = await this.modalController.create({
+            component: MapOptionsScreen
+        });
+        return await modal.present();
+    }
+
 }
+

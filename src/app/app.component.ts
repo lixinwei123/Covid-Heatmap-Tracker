@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { Platform, ModalController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { AlertsScreen } from './alerts-screen/alerts-screen.page';
+import { ManageAlertsScreen } from './manage-alerts-screen/manage-alerts-screen.page';
+import { SettingsScreen } from './settings-screen/settings-screen.page';
 
 @Component({
   selector: 'app-root',
@@ -13,9 +16,14 @@ export class AppComponent implements OnInit {
   public selectedIndex = 0;
   public appPages = [
     {
-      title: 'Alerts',
+      title: 'Create Alerts',
       url: '/app/home',
       icon: 'notifications'
+    },
+    {
+      title: 'Manage Alerts',
+      url: '/app/home',
+      icon: 'briefcase'
     },
     {
       title: 'COVID-19 CDC Resource',
@@ -36,7 +44,8 @@ export class AppComponent implements OnInit {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    public modalController: ModalController
   ) {
     this.initializeApp();
   }
@@ -54,4 +63,24 @@ export class AppComponent implements OnInit {
       this.selectedIndex = this.appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
     }
   }
+
+  async openMenuModals(modalID) {
+    let modal
+    if (modalID == 'Create Alerts') {
+      modal = await this.modalController.create({
+        component: AlertsScreen
+      });
+    } else if (modalID == 'Manage Alerts') {
+      modal = await this.modalController.create({
+        component: ManageAlertsScreen
+      });
+    } else if (modalID == 'Settings') {
+      modal = await this.modalController.create({
+        component: SettingsScreen
+      });
+    }
+
+    return await modal.present();
+  }
+
 }
