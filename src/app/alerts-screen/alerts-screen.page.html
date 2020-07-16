@@ -1,0 +1,55 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-icon name="close-outline" style="font-size: 30px;margin-left: 5px;" (click)="closeModal()"></ion-icon>
+    </ion-toolbar>
+    <ion-toolbar>
+        <ion-title size="large">Create Alerts</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+    <div id="alerts-container" style="padding-right: 20px;">
+        <ion-item style="margin-top: 15px;">
+            <ion-label position="floating">Enter A Location</ion-label>
+            <ion-input placeholder="1 S 15th St, Philadelphia, PA"></ion-input>
+        </ion-item>
+        <ion-item style="margin-bottom: 15px;">
+            <ion-label position="floating">Location Nickname</ion-label>
+            <ion-input placeholder="Dilworth Park"></ion-input>
+        </ion-item>
+        <ion-segment color="primary" style="margin-left: 15px; width: calc(100vw - 30px); margin-top: 15px;" [(ngModel)]="alertType" (ionChange)="segmentChanged($event)">
+            <ion-segment-button value="till-trigger" layout="icon-bottom">
+              <ion-icon name="infinite"></ion-icon>
+              <ion-label>Good Till Triggered</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="datetime" layout="icon-bottom">
+              <ion-icon name="calendar"></ion-icon>
+              <ion-label>Datetime</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        <ion-item>
+            <ion-label>Location Event</ion-label>
+            <ion-select [(ngModel)]="locationEvent" interface="action-sheet" style="max-width: 60%;" placeholder="Select an event">
+                <ion-select-option [value]="event" *ngFor="let event of locationEvents">{{event}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item [hidden]="!enableDateFields" style="margin-top: 5px;">
+            <ion-label>Start Date</ion-label>
+            <ion-datetime value="1990-02-19" placeholder="Select Date"></ion-datetime>
+        </ion-item>
+        <ion-item [hidden]="!enableDateFields" style="margin-top: 5px;">
+            <ion-label>Start Time</ion-label>
+            <ion-datetime display-format="h:mm A" picker-format="h:mm A" value="1990-02-19T07:43Z"></ion-datetime>
+        </ion-item>
+
+        <!-- <h6>Alert me when im 5 miles away from a large crowd</h6>
+        <ion-range min="-200" max="200" pin color="secondary">
+            <ion-icon slot="start" size="small" name="contrast"></ion-icon>
+            <ion-icon slot="end" name="contrast"></ion-icon>
+          </ion-range> -->
+    </div>
+</ion-content>
+<ion-toolbar>
+    <ion-footer class="ion-no-border" id="home-screen-bottom-nav">
+        <ion-button expand="block" (click)="createAlert()">Create Alert</ion-button>
+    </ion-footer>
+  </ion-toolbar>

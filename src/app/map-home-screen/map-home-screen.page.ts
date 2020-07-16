@@ -1,6 +1,8 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { MouseEvent, GoogleMapsAPIWrapper, MarkerManager, AgmMarker} from '@agm/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { MapOptionsScreen } from '../map-options-screen/map-options-screen.page';
+import { ModalController } from '@ionic/angular';
 
 @Component({
     selector: 'app-map-home-screen',
@@ -310,7 +312,6 @@ export class MapHomeScreen implements OnInit {
             this.setCurrentPosition();
         });
     }
-
     private async recenter(){
         const result = await this.geolocation.getCurrentPosition({ enableHighAccuracy: true}).catch((error) => {
             console.log('Error getting location', error);
@@ -377,4 +378,11 @@ export class MapHomeScreen implements OnInit {
                 console.error('Error Moving Map: ' + reason);
             });
     }
+    async openMapOptions() {
+        let modal = await this.modalController.create({
+            component: MapOptionsScreen
+        });
+        return await modal.present();
+    }
 }
+
