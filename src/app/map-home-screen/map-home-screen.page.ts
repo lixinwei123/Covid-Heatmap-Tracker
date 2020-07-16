@@ -360,8 +360,6 @@ export class MapHomeScreen implements OnInit {
         const url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + placeId
             + '&fields=geometry,name&key=' + this.API_AUTH_KEY;
 
-        console.log(places);
-
         fetch(this.proxyurl + url)
             .then(response => response.json())
             .then(content => {
@@ -392,12 +390,12 @@ export class MapHomeScreen implements OnInit {
         let modal = await this.modalCtrl.create({
             component: MapOptionsScreen,
             componentProps: {
-                'map': this.mapWrapper
+                'map': this.mapsWrapper
             }
         });
         await modal.present();
         const { data } = await modal.onWillDismiss();
-        this.mapWrapper = new google.maps.Map(document.getElementById('map-container'), {
+        this.mapsWrapper = new google.maps.Map(document.getElementById('map-container'), {
             center: this.userLocation.getPosition(),
             zoom: 13,
             styles: data.componentProps.map.styles,
@@ -406,12 +404,12 @@ export class MapHomeScreen implements OnInit {
         this.userLocation = new google.maps.Marker({
             clickable: true,
             position: this.userLocation.getPosition(),
-            map: this.mapWrapper
+            map: this.mapsWrapper
         });
         this.heatmap = new google.maps.visualization.HeatmapLayer({
             data: this.heatmapData
         });
-        this.heatmap.setMap(this.mapWrapper);
+        this.heatmap.setMap(this.mapsWrapper);
         this.updateUserLocation()
     }
 
