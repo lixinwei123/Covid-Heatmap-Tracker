@@ -6,11 +6,13 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AlertsScreen } from './alerts-screen/alerts-screen.page';
 import { ManageAlertsScreen } from './manage-alerts-screen/manage-alerts-screen.page';
 import { SettingsScreen } from './settings-screen/settings-screen.page';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss']
+  styleUrls: ['app.component.scss'],
+  providers:[InAppBrowser]
 })
 export class AppComponent implements OnInit {
   public selectedIndex = 0;
@@ -45,7 +47,8 @@ export class AppComponent implements OnInit {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    public modalController: ModalController
+    public modalController: ModalController,
+    private iab: InAppBrowser
   ) {
     this.initializeApp();
   }
@@ -70,17 +73,25 @@ export class AppComponent implements OnInit {
       modal = await this.modalController.create({
         component: AlertsScreen
       });
+      return await modal.present();
     } else if (modalID == 'Manage Alerts') {
       modal = await this.modalController.create({
         component: ManageAlertsScreen
       });
+      return await modal.present();
     } else if (modalID == 'Settings') {
       modal = await this.modalController.create({
         component: SettingsScreen
       });
+      return await modal.present();
+    } else if(modalID == 'COVID-19 Chat Bot') {
+      this.openChatBot()
     }
 
-    return await modal.present();
+  }
+
+  openChatBot() {
+    const browser = this.iab.create('https://www.cs.drexel.edu/~med353/Hackathon/cai.html');
   }
 
 }

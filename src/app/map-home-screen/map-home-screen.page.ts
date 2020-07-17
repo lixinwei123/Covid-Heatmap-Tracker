@@ -5,6 +5,7 @@ import { MapOptionsScreen } from '../map-options-screen/map-options-screen.page'
 import { ModalController } from '@ionic/angular';
 import { JsonPipe } from '@angular/common';
 import { range } from 'rxjs';
+
 declare const google: any
 @Component({
     selector: 'app-map-home-screen',
