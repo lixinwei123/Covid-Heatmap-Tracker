@@ -465,13 +465,8 @@ export class MapHomeScreen implements OnInit {
         'rgba(255, 0, 0, 1)'
         ];
 
-  var green = [
-          'rgba(0, 255, 0, 0)',
-          'rgba(0, 255, 0, 1)'
-          ];
         this.generateHeatMap(yellow,lat,lng)
         this.generateHeatMap(red,lat,lng)
-        this.generateHeatMap(green,lat,lng)
         for(var place in results){
             console.log(results[place])
             const url = "http://100.25.159.100/api/get_popular_times?key=" + this.API_AUTH_KEY + "&place_id=" + results[place].place_id
@@ -513,7 +508,7 @@ export class MapHomeScreen implements OnInit {
             opacity: 1
           })
 
-        for(var i = 0; i < 4;i ++){
+        for(var i = 0; i < 8;i ++){
             var latlng = this.randomGeo(lat,lng,85)
             let lati = latlng.lat
             let lngi = latlng.lng
