@@ -295,7 +295,7 @@ export class MapHomeScreen implements OnInit {
         //   var sanFrancisco = new google.maps.LatLng(37.774546, -122.433523);
            this.mapsWrapper = new google.maps.Map(document.getElementById('map-container'), {
             center: null,
-            zoom: 50,
+            zoom: 17,
             styles: this.googleMapStyles,
             disableDefaultUI: true
           });
@@ -305,7 +305,7 @@ export class MapHomeScreen implements OnInit {
             // dissipating: false
           });
           this.heatmap.setMap(this.mapsWrapper);
-        // this.updateUserLocation()
+          this.updateUserLocation()
     }
 
     private setCurrentPosition() {
@@ -341,7 +341,7 @@ export class MapHomeScreen implements OnInit {
         });
         if (!!result){
             this.mapsWrapper.setCenter({ lat: result.coords.latitude, lng: result.coords.longitude });
-            this.mapsWrapper.setZoom(50);
+            this.mapsWrapper.setZoom(17);
         }
     }
 
@@ -413,7 +413,7 @@ export class MapHomeScreen implements OnInit {
         const { data } = await modal.onWillDismiss();
         this.mapsWrapper = new google.maps.Map(document.getElementById('map-container'), {
             center: this.userLocation.getPosition(),
-            zoom:50,
+            zoom:17,
             styles: data.componentProps.map.styles,
             disableDefaultUI: true
         });
