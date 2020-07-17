@@ -274,7 +274,7 @@ export class MapHomeScreen implements OnInit {
     public userLocation: any;
     public siteLocation: any;
     public canCheckIn: boolean;
-    public zoom = 15;
+    public zoom = 50;
     public queryText: string;
     private proxyurl = 'https://cors-anywhere.herokuapp.com/';
     private API_AUTH_KEY = 'AIzaSyB1rFlu0wU5C1mRq-gc18Qq5U-iNlPhT1k';
@@ -295,7 +295,7 @@ export class MapHomeScreen implements OnInit {
         //   var sanFrancisco = new google.maps.LatLng(37.774546, -122.433523);
            this.mapsWrapper = new google.maps.Map(document.getElementById('map-container'), {
             center: null,
-            zoom: 13,
+            zoom: 50,
             styles: this.googleMapStyles,
             disableDefaultUI: true
           });
@@ -305,7 +305,7 @@ export class MapHomeScreen implements OnInit {
             // dissipating: false
           });
           this.heatmap.setMap(this.mapsWrapper);
-        this.updateUserLocation()
+        // this.updateUserLocation()
     }
 
     private setCurrentPosition() {
@@ -341,7 +341,7 @@ export class MapHomeScreen implements OnInit {
         });
         if (!!result){
             this.mapsWrapper.setCenter({ lat: result.coords.latitude, lng: result.coords.longitude });
-            this.mapsWrapper.setZoom(15);
+            this.mapsWrapper.setZoom(50);
         }
     }
 
@@ -413,7 +413,7 @@ export class MapHomeScreen implements OnInit {
         const { data } = await modal.onWillDismiss();
         this.mapsWrapper = new google.maps.Map(document.getElementById('map-container'), {
             center: this.userLocation.getPosition(),
-            zoom: 13,
+            zoom:50,
             styles: data.componentProps.map.styles,
             disableDefaultUI: true
         });
@@ -507,14 +507,14 @@ export class MapHomeScreen implements OnInit {
         var heatList = []
         var heatmap = new google.maps.visualization.HeatmapLayer({
             // data: [{location: new google.maps.LatLng(latlng.lat, latlng.lng),weight:0.4 }],
-            radius:25,
+            radius:60,
             gradient: color,
             map:this.mapsWrapper,
             opacity: 1
           })
 
-        for(var i = 0; i < 15;i ++){
-            var latlng = this.randomGeo(lat,lng,100)
+        for(var i = 0; i < 6;i ++){
+            var latlng = this.randomGeo(lat,lng,85)
             let lati = latlng.lat
             let lngi = latlng.lng
             heatList.push({location: new google.maps.LatLng(lati, lngi),weight:0.5 }) 
