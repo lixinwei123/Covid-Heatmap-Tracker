@@ -513,7 +513,7 @@ export class MapHomeScreen implements OnInit {
             opacity: 1
           })
 
-        for(var i = 0; i < 6;i ++){
+        for(var i = 0; i < 4;i ++){
             var latlng = this.randomGeo(lat,lng,85)
             let lati = latlng.lat
             let lngi = latlng.lng
