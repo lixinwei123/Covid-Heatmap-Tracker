@@ -4,6 +4,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { MapOptionsScreen } from '../map-options-screen/map-options-screen.page';
 import { ModalController } from '@ionic/angular';
 import { JsonPipe } from '@angular/common';
+
 declare const google: any
 @Component({
     selector: 'app-map-home-screen',

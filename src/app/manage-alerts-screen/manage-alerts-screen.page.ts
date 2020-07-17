@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { AlertsService } from '../_services/alerts.service';
 
 @Component({
     selector: 'manage-alerts-screen',
@@ -8,9 +9,9 @@ import { ModalController } from '@ionic/angular';
     providers: []
 })
 export class ManageAlertsScreen implements OnInit {
-
-    constructor(public modalController: ModalController) {
-
+    alerts = []
+    constructor(public modalController: ModalController, private alertsService: AlertsService) {
+        this.alerts = this.alertsService.getAlerts()
     }
 
     async ngOnInit() {
@@ -19,6 +20,10 @@ export class ManageAlertsScreen implements OnInit {
 
     closeModal() {
         this.modalController.dismiss()
+    }
+
+    deleteAlert(nickname){
+        this.alertsService.removeAlert(nickname)
     }
 
 }
