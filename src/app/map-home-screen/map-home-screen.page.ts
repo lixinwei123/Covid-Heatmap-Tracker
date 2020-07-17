@@ -281,7 +281,8 @@ export class MapHomeScreen implements OnInit {
     public mapsWrapper: google.maps.Map;
     public heatmap: google.maps.visualization.HeatmapLayer
     public heatmapData: any;
-
+    public heatmapFrameList: any;
+    public colorList = ["#7FFF00","#ebd80e","#d90e00"]
     constructor( private geolocation: Geolocation, private modalCtrl: ModalController) {
 
     }
@@ -289,6 +290,7 @@ export class MapHomeScreen implements OnInit {
     async ngOnInit() {
         console.log(document.getElementById('map-container'))
          this.heatmapData = [];
+         this.heatmapFrameList = []
         //   var sanFrancisco = new google.maps.LatLng(37.774546, -122.433523);
            this.mapsWrapper = new google.maps.Map(document.getElementById('map-container'), {
             center: null,
@@ -296,10 +298,9 @@ export class MapHomeScreen implements OnInit {
             styles: this.googleMapStyles,
             disableDefaultUI: true
           });
-          
          this.heatmap = new google.maps.visualization.HeatmapLayer({
             data: this.heatmapData,
-            radius:15,
+            radius:8,
             // dissipating: false
           });
           this.heatmap.setMap(this.mapsWrapper);
@@ -453,6 +454,23 @@ export class MapHomeScreen implements OnInit {
      async getHeatMapData(results,lat,lng){
         var currentHour = new Date().getHours();
         var currentDay = new Date().getDay() - 1;
+        var yellow = [
+            'rgba(255, 255, 0, 0)',
+            'rgba(255, 255, 0, 1)'
+            ];
+
+  var red = [
+        'rgba(255, 0, 0, 0)',
+        'rgba(255, 0, 0, 1)'
+        ];
+
+  var green = [
+          'rgba(0, 255, 0, 0)',
+          'rgba(0, 255, 0, 1)'
+          ];
+        this.generateHeatMap(yellow,lat,lng)
+        this.generateHeatMap(red,lat,lng)
+        this.generateHeatMap(green,lat,lng)
         for(var place in results){
             console.log(results[place])
             const url = "http://100.25.159.100/api/get_popular_times?key=" + this.API_AUTH_KEY + "&place_id=" + results[place].place_id
@@ -469,20 +487,39 @@ export class MapHomeScreen implements OnInit {
                     this.heatmapData.push({location: new google.maps.LatLng(data.coordinates.lat,data.coordinates.lng),weight: Math.random() * 4 + 2})
                     console.log(Math.random() * 4)
                 }
-                // for(var i = 0; i < 100;i ++){
-                //     var latlng = this.randomGeo(lat,lng,100)
-                //     var weightrand = Math.random() * 3 + 0.5
-                //     console.log(weightrand)
-                //     this.heatmapData.push({location: new google.maps.LatLng(latlng.lat, latlng.lng),weight:weightrand })
-               
-                //         }
-                this.heatmap.setData(this.heatmapData)
-                this.heatmap.setMap(this.mapsWrapper);
+
+                // for(var heatmap in this.heatmapFrameList){
+                //     console.log(this.heatmapFrameList[heatmap])
+                //     this.heatmapFrameList[heatmap].setMap(this.mapsWrapper)
+                // }
+
+                        // this.heatmap.setMap(this.mapsWrapper);
+                // this.heatmap.setData(this.heatmapData)
+                // this.heatmap.setMap(this.mapsWrapper);
             }))
             .catch(reason =>{
-                console.error('Error fetching. Check proxy?')
+                console.error('Error fetching. Check proxy?' + reason)
             })
         }
+    }
+    generateHeatMap(color,lat,lng){
+        var heatList = []
+        var heatmap = new google.maps.visualization.HeatmapLayer({
+            // data: [{location: new google.maps.LatLng(latlng.lat, latlng.lng),weight:0.4 }],
+            radius:25,
+            gradient: color,
+            map:this.mapsWrapper,
+            opacity: 1
+          })
+
+        for(var i = 0; i < 15;i ++){
+            var latlng = this.randomGeo(lat,lng,100)
+            let lati = latlng.lat
+            let lngi = latlng.lng
+            heatList.push({location: new google.maps.LatLng(lati, lngi),weight:0.5 }) 
+        }
+         heatmap.setData(heatList)
+         this.heatmapFrameList.push(heatmap)
     }
     randomGeo(lat,lng, radius) {
         var y0 = lat;
@@ -491,7 +528,7 @@ export class MapHomeScreen implements OnInit {
     
         var u = Math.random();
         var v = Math.random();
-    
+
         var w = rd * Math.sqrt(u);
         var t = 2 * Math.PI * v;
         var x = w * Math.cos(t);
